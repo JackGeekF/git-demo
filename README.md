@@ -9,18 +9,20 @@
 7. git merge
 8. git rebase
 
-## 直接记录快照，而非差异比较
+[toc]
+
+## Git: 直接记录快照，而非差异比较
 >Git 和其它版本控制系统（包括 Subversion 和近似工具）的主要差别在于 Git 对待数据的方法。 概念上来区分，其它大部分系统以文件变更列表的方式存储信息。 这类系统（CVS、Subversion、Perforce、Bazaar 等等）将它们保存的信息看作是**一组基本文件和每个文件随时间逐步累积的差异**。
 ![差异](https://git-scm.com/book/en/v2/images/deltas.png)
 
 >Git 更像是把数据看作是对小型文件系统的一组快照。 每次你提交更新，或在 Git 中保存项目状态时，它主要**对当时的全部文件制作一个快照并保存这个快照的索引**。 为了高效，如果文件没有修改，Git 不再重新存储该文件，而是只保留一个链接指向之前存储的文件。 Git 对待数据更像是一个快照流。
 ![快照](https://git-scm.com/book/en/v2/images/snapshots.png)
-## 创建一个git仓库
+## 创建一个Git仓库
 ```
 $ git init
 Initialized empty Git repository in D:/workspace/git-demo/.git/
 ```
-### git目录：
+### 1. Git目录：
 ```
 $ ls .git/ -F1
 config
@@ -42,7 +44,7 @@ $ cat .git/HEAD
 $ find .git/objects/ -type f
 
 ```
-### 添加一个文件：
+### 2. 添加一个文件：
 ```
 $ touch file1
 $ git add file1
@@ -63,7 +65,7 @@ $ find .git/objects/ -type f
 $ git cat-file -p 3b18e
 hello world
 ```
-### 提交文件
+### 3. 提交文件
 ```
 $ git commit -m 'commit file1 with "hello world"'
 [master (root-commit) 03715f0] commit file1 with "hello world"
@@ -89,7 +91,7 @@ $ git cat-file -p c8f5514375be1
 100644 blob 3b18e512dba79e4c8300dd08aeb37f8e728b8dad    file1
 ```
 
-### 提交第二个版本
+### 4. 提交第二个版本
 ```
 $ echo 'hello git' >> file1
 ```
@@ -173,7 +175,7 @@ Date:   Tue Aug 20 00:18:12 2019 +0800
 
 ## 分支的实质 （HEAD和Ref）
 
-#### 切换新分支(dev)：
+#### 1. 切换新分支(dev)：
 ```
 $ git branch dev
 $ cat .git/refs/heads/dev
@@ -190,7 +192,7 @@ a0ef9e3507d4393391e187b46bea76ad471efab2
 $ git log
 ```
 
-#### 在dev分支上提交：
+#### 2. 在dev分支上提交：
 ```
 $ touch file2
 $ git add file2
@@ -272,9 +274,9 @@ $ git ls-files -s
 100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0       file2
 ```
 
-### git reset [--soft, --mixed, --hard]
+### 1. git reset [--soft, --mixed, --hard]
 
-#### git reset --soft
+#### (1) git reset --soft
 ```
 $ cat .git/refs/heads/dev
 beb0fc375468d68f57011f471229de0a0660fb0a
@@ -300,7 +302,7 @@ Date:   Tue Aug 20 00:18:12 2019 +0800
 $ git reset --soft beb0fc
 ```
 
-#### git reset --mixed
+#### (2) git reset --mixed
 
 ```
 $ echo 'file2 first line' > file2
@@ -326,7 +328,7 @@ $ git ls-files -s
 $ git add file2
 ```
 
-#### git reset --hard
+#### (3) git reset --hard
 
 ```
 $ git reset --hard HEAD
@@ -340,7 +342,7 @@ $ cat file2
 
 ```
 
-#### 在文件上：
+#### (4) 在文件上：
 ```
 $ cat .git/refs/heads/dev
 beb0fc375468d68f57011f471229de0a0660fb0a
@@ -381,8 +383,9 @@ beb0fc375468d68f57011f471229de0a0660fb0a
 >
 > ```
 
-### git checkout
+### 2. git checkout
 
+#### (1) 在commit上：
 ```
 $ git checkout master
 Switched to branch 'master'
@@ -411,7 +414,7 @@ file1
 > $ git checkout dev
 > Switched to branch 'dev'
 > ```
-#### 在文件上：
+#### (2) 在文件上：
 
 ```
 $ cat file1
@@ -433,7 +436,7 @@ hello world
 
 ## 分支合并
 
-### git merge
+### 1. git merge
 
 ```
 $ git log
@@ -456,7 +459,7 @@ Date:   Tue Aug 20 00:18:12 2019 +0800
     commit file1 with "hello world"
 ```
 
-##### 在master分支上提交新文件"file3", 与dev分支合并:
+#### (1) 在master分支上提交新文件"file3", 与dev分支合并:
 
 ```
 $ git checkout master
@@ -479,7 +482,7 @@ $ git ls-files -s
 100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0       file3
 ```
 
-##### 日志结构：
+#### (2) 日志结构：
 
 ```
 $ git log
@@ -544,7 +547,7 @@ Merge branch 'dev'
 ```
 ![merge1](merge1.jpg)
 
-#### fast-forward
+#### (3) fast-forward
 ```
 $ git checkout -b dev1 a0ef9e
 $ git merge dev
@@ -576,14 +579,14 @@ Date:   Tue Aug 20 00:18:12 2019 +0800
 ```
 ![merge2](merge2.jpg)
 
-### git rebase
+### 2. git rebase
 
-#### 创建新的分支dev2：
+#### (1) 创建新的分支dev2：
 ```
 $ git checkout -b dev2 d4d7fe
 ```
 ![rebase1](rebase1.jpg)
-#### rebase dev
+#### (2) rebase dev
 ```
 $ git rebase dev
 
@@ -633,13 +636,13 @@ committer Jack Feng <879721421@qq.com> 1566319506 +0800
 Merge branch 'dev'
 ```
 
-### 解决冲突
+### 3. 解决冲突
 
-#### 创建新的分支dev3:
+#### (1) 创建新的分支dev3:
 ```
 $ git checkout -b dev3 d4d7fe
 ```
-#### 分别在dev和dev3上修改file1：
+#### (2) 分别在dev和dev3上修改file1：
 ```
 $ echo 'new file1' > file1
 $ git add file1
@@ -656,13 +659,13 @@ $ git commit -m 'replace file1 on dev'
 
 ```
 ![conflict2](conflict2.jpg)
-##### index区:
+##### a. index区:
 ```
 $ git ls-files -s
 100644 582b6f7571a42070ecfb2945273a29571ea070ed 0       file1
 100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0       file2
 ```
-##### Git仓库：
+##### b. Git仓库：
 ```
 $ git cat-file -p HEAD
 tree e1d3ab31ccde0aa81cbe3263710ce4b978c7c2d8
@@ -688,7 +691,7 @@ $ git cat-file -p 84b4e0b9
 100644 blob 26f8bd9b54c8ac43991972447145a7988ad99105    file1   <---------
 100644 blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391    file3
 ```
-#### 合并dev和dev3
+#### (3) 合并dev和dev3
 ```
 $ git merge dev3
 Auto-merging file1
@@ -723,7 +726,7 @@ Date:   Tue Aug 20 00:18:12 2019 +0800
 
     commit file1 with "hello world"
 ```
-##### index区：
+##### a. index区：
 ```
 $ git ls-files -s
 100644 c940fc8d96f03c8bc23eabd2b8af558afde227f9 1       file1  <----- ?
@@ -744,7 +747,7 @@ commit file1 (Ver.2) with appending "hello git"
 $ git cat-file -p bee32e
 100644 blob c940fc8d96f03c8bc23eabd2b8af558afde227f9    file1  <-----
 ```
-##### git status:
+##### b. git status:
 ```
 $ git status
 On branch dev
@@ -761,7 +764,7 @@ Unmerged paths:
 
         both modified:   file1
 ```
-##### git commit 会失败:
+##### c. git commit 会失败:
 ```
 $ git commit
 error: Committing is not possible because you have unmerged files.
@@ -777,13 +780,13 @@ dev new line
 new file1
 >>>>>>> dev3
 ```
-##### 手动选择需要的部分：
+#### (3) 手动选择需要的部分：
 ```
 $ cat file1
 dev new line
 new file1
 ```
-##### 更新index：
+#### (4) 更新index：
 ```
 $ git add file1
 
@@ -792,7 +795,7 @@ $ git ls-files -s
 100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0       file2
 100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0       file3
 ```
-##### 提交更改，完成合并
+#### (5) 提交更改，完成合并
 ```
 $ git commit
 [dev dcde47c] Merge branch 'dev3' into dev
